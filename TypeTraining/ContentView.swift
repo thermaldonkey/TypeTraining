@@ -36,6 +36,28 @@ enum PokemonType: CaseIterable, Comparable {
             return "Water"
         }
     }
+    
+    func icon() -> String {
+        switch self {
+        case .grass:
+            return "leaf.circle.fill"
+        case .fire:
+            return "flame.circle.fill"
+        case .water:
+            return "drop.circle.fill"
+        }
+    }
+    
+    func color() -> Color {
+        switch self {
+        case .grass:
+            return .green
+        case .fire:
+            return .red
+        case .water:
+            return .blue
+        }
+    }
 }
 
 extension PokemonType {
@@ -67,14 +89,33 @@ struct ContentView: View {
     var body: some View {
         ZStack {
             VStack {
-                Text("Your rival sent out a \(enemyType.stringValue())-type Pokemon!")
-                Text("Which type would you use to \(shouldWinRound ? "win" : "lose")?")
-                HStack {
+                Text("Your rival sent out a Pokemon of type")
+                    .foregroundStyle(.secondary)
+                    .font(.subheadline.weight(.heavy))
+                Text(enemyType.stringValue())
+                    .font(.largeTitle.weight(.semibold))
+                    .foregroundColor(enemyType.color())
+                Text("Tap the type that would")
+                    .foregroundStyle(.secondary)
+                    .font(.subheadline.weight(.heavy))
+                Text("\(shouldWinRound ? "WIN" : "LOSE")")
+                    .font(.largeTitle.weight(.heavy))
+                VStack(spacing: 20) {
                     ForEach(PokemonType.allCases, id: \.self) { tipe in
-                        Button(tipe.stringValue()) {
+                        Button(action: {
                             chooseType(as: tipe)
+                        }) {
+                            HStack {
+                                Image(systemName: tipe.icon())
+                                Text(tipe.stringValue())
+                                    .font(.largeTitle.weight(.heavy))
+                            }
+                            .font(.system(size: 50))
                         }
                         .padding()
+                        .frame(width: 300, height: 110)
+                        .background(RoundedRectangle(cornerRadius: 8).fill(tipe.color()))
+                        .foregroundColor(.primary)
                     }
                 }
             }
