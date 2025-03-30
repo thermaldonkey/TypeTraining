@@ -89,17 +89,27 @@ struct ContentView: View {
     var body: some View {
         ZStack {
             VStack {
+                Text("Type Training")
+                    .font(.largeTitle.weight(.bold))
+                    .foregroundStyle(.white)
+                
+                Spacer()
+                Spacer()
+                
                 Text("Your rival sent out a Pokemon of type")
                     .foregroundStyle(.secondary)
                     .font(.subheadline.weight(.heavy))
                 Text(enemyType.stringValue())
-                    .font(.largeTitle.weight(.semibold))
+                    .font(.title.weight(.semibold))
                     .foregroundColor(enemyType.color())
                 Text("Tap the type that would")
                     .foregroundStyle(.secondary)
                     .font(.subheadline.weight(.heavy))
                 Text("\(shouldWinRound ? "WIN" : "LOSE")")
-                    .font(.largeTitle.weight(.heavy))
+                    .font(.title.weight(.heavy))
+                
+                Spacer()
+                
                 VStack(spacing: 20) {
                     ForEach(PokemonType.allCases, id: \.self) { tipe in
                         Button(action: {
@@ -108,16 +118,31 @@ struct ContentView: View {
                             HStack {
                                 Image(systemName: tipe.icon())
                                 Text(tipe.stringValue())
-                                    .font(.largeTitle.weight(.heavy))
+                                    .font(.title.weight(.heavy))
                             }
                             .font(.system(size: 50))
                         }
                         .padding()
-                        .frame(width: 300, height: 110)
+                        .frame(width: 250, height: 100)
                         .background(RoundedRectangle(cornerRadius: 8).fill(tipe.color()))
                         .foregroundColor(.primary)
                     }
                 }
+                
+                Spacer()
+                
+                ProgressView(value: Double(currentRound), total: Double(roundTotal)) {
+                    Text("Battle!")
+                } currentValueLabel: {
+                    Text("Round \(currentRound)/\(roundTotal)")
+                }
+                .padding()
+                .tint(.primary)
+                .font(.subheadline.weight(.heavy))
+                .foregroundStyle(.secondary)
+                .background(.thinMaterial)
+                
+                Spacer()
             }
         }
         .alert(scoreTitle, isPresented: $roundOver) {
